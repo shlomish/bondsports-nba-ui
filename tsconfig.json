@@ -21,7 +21,10 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "paths": {
-      "@types": ["./types/index.ts"]
+      "@types": ["./types/index.ts"],
+      "@api": ["./api/index.ts"],
+      "@components": ["./components/index.ts"],
+      "@constants": ["./constants.ts"]
     },
   },
   "include": [
