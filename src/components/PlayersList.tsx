@@ -1,8 +1,5 @@
-import { useGetPlayers } from "@api";
 import { Player } from "@types";
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@constants";
-import { debounce } from "lodash";
-import { useEffect, useState } from "react";
+import { usePlayers } from "@hooks";
 
 interface PlayersListProps {
   className?: string;
@@ -15,53 +12,39 @@ interface PlayersListItemProps {
 
 const PlayersList = (props: PlayersListProps) => {
   const { className } = props;
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(DEFAULT_PAGE);
   const {
-    data: playersRes,
+    players,
     isLoading,
     error,
-  } = useGetPlayers({ page, perPage: DEFAULT_PAGE_SIZE, search: searchTerm });
-
-  const handleSearch = debounce((e) => {
-    setSearchTerm(e.target.value);
-    setPage(1);
-  }, 500);
-
-  const onPrev = () => {
-    setPage(Math.max(DEFAULT_PAGE, page - 1));
-  };
-
-  const onNext = () => {
-    setPage(page + 1);
-  };
-
-  useEffect(() => {
-    return () => handleSearch.cancel();
-  }, []);
+    page,
+    searchTerm,
+    canGoNext,
+    canGoPrevious,
+    setSearchTerm,
+    nextPage,
+    previousPage,
+  } = usePlayers();
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  // if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className={`flex flex-col p-4 space-y-2 ${className}`}>
+    <div className={`flex flex-col p-4 space-y-2 bg-slate-400 ${className}`}>
       <input
         type="text"
         placeholder="Search players"
-        onChange={handleSearch}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-4 p-2 border rounded-md"
       />
-      {page > DEFAULT_PAGE && <button onClick={onPrev}>Previous</button>}
-      {playersRes && page < playersRes?.meta.total_pages && (
-        <button onClick={onNext}>Next</button>
-      )}
-      {/* List rendering */}
-      {isLoading && <div>Loading...</div>}
-      {/* {error && <div>Error: {error.message}</div>} */}
-      {playersRes &&
-        playersRes.data.map((player) => (
-          <PlayerListItem key={player.id} player={player} />
-        ))}
+      <div className="space-y-2 overflow-y-auto">
+        {players &&
+          players.map((player) => (
+            <PlayerListItem key={player.id} player={player} />
+          ))}
+      </div>
+      {canGoPrevious && <button onClick={previousPage}>Previous</button>}
+      {canGoNext && <button onClick={nextPage}>Next</button>}
     </div>
   );
 };

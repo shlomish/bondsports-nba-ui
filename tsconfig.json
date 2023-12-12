@@ -24,6 +24,7 @@
       "@types": ["./types/index.ts"],
       "@api": ["./api/index.ts"],
       "@components": ["./components/index.ts"],
+      "@hooks": ["./hooks/index.ts"],
       "@constants": ["./constants.ts"]
     },
   },
