@@ -1,5 +1,6 @@
 import { Player } from "@types";
 import { usePlayers } from "@hooks";
+import { Icon } from "@components";
 
 interface PlayersListProps {
   className?: string;
@@ -17,6 +18,7 @@ const PlayersList = (props: PlayersListProps) => {
     isLoading,
     error,
     page,
+    totalPages,
     searchTerm,
     canGoNext,
     canGoPrevious,
@@ -43,8 +45,21 @@ const PlayersList = (props: PlayersListProps) => {
             <PlayerListItem key={player.id} player={player} />
           ))}
       </div>
-      {canGoPrevious && <button onClick={previousPage}>Previous</button>}
-      {canGoNext && <button onClick={nextPage}>Next</button>}
+      <div className="flex">
+        {canGoPrevious && (
+          <button onClick={previousPage}>
+            <Icon name="arrow_left_alt" />
+          </button>
+        )}
+        <div className="flex-1 text-center">
+          {page} / {totalPages}
+        </div>
+        {canGoNext && (
+          <button onClick={nextPage}>
+            <Icon name="arrow_right_alt" />
+          </button>
+        )}
+      </div>
     </div>
   );
 };
