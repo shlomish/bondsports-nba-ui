@@ -1,9 +1,21 @@
 import { Player } from "@types";
-import { usePlayers } from "@hooks";
 import { Icon } from "@components";
+import { DEFAULT_PAGE } from "@constants";
+import { useState } from "react";
+
+interface PaginationControlsProps {
+  page: number;
+  totalPages: number;
+  onNext: () => void;
+  onPrev: () => void;
+}
 
 interface PlayersListProps {
+  players: Player[];
   className?: string;
+  paginationControls?: PaginationControlsProps;
+  searchTerm?: string;
+  setSearchTerm?: (newSearchTerm: string) => void;
   onPLayerClick?: (player: Player) => void;
 }
 
@@ -12,54 +24,54 @@ interface PlayersListItemProps {
 }
 
 const PlayersList = (props: PlayersListProps) => {
-  const { className } = props;
-  const {
-    players,
-    isLoading,
-    error,
-    page,
-    totalPages,
-    searchTerm,
-    canGoNext,
-    canGoPrevious,
-    setSearchTerm,
-    nextPage,
-    previousPage,
-  } = usePlayers();
+  const { players, paginationControls, searchTerm, setSearchTerm } = props;
+  const withSearch = !!setSearchTerm && searchTerm !== undefined;
 
-  if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error.message}</div>;
+  const onTypingSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    withSearch && setSearchTerm(e.target.value);
+  };
 
   return (
-    <div className={`flex flex-col p-4 space-y-2 bg-slate-400 ${className}`}>
-      <input
-        type="text"
-        placeholder="Search players"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4 p-2 border rounded-md"
-      />
-      <div className="space-y-2 overflow-y-auto">
-        {players &&
-          players.map((player) => (
-            <PlayerListItem key={player.id} player={player} />
-          ))}
+    <div className="flex flex-col flex-grow p-4 space-y-2 bg-slate-400 border rounded-md">
+      {withSearch && (
+        <input
+          type="text"
+          placeholder="Search here..."
+          value={searchTerm}
+          onChange={onTypingSearch}
+          className="mb-4 p-2 border rounded-md"
+        />
+      )}
+      <div className="flex-1 overflow-y-auto space-y-2 bg-white p-2 rounded-md">
+        {players.map((player) => (
+          <PlayerListItem key={player.id} player={player} />
+        ))}
       </div>
-      <div className="flex">
-        {canGoPrevious && (
-          <button onClick={previousPage}>
-            <Icon name="arrow_left_alt" />
-          </button>
-        )}
-        <div className="flex-1 text-center">
-          {page} / {totalPages}
-        </div>
-        {canGoNext && (
-          <button onClick={nextPage}>
-            <Icon name="arrow_right_alt" />
-          </button>
-        )}
+      {paginationControls && <PaginationControls {...paginationControls} />}
+    </div>
+  );
+};
+
+const PaginationControls = (props: PaginationControlsProps) => {
+  const { page, totalPages, onNext, onPrev } = props;
+  const showNext = page < totalPages;
+  const showPrev = page > DEFAULT_PAGE;
+
+  return (
+    <div className="flex space-x-4 mx-auto">
+      {showPrev && (
+        <button onClick={onPrev}>
+          <Icon name="arrow_left_alt" />
+        </button>
+      )}
+      <div className="">
+        {page} / {totalPages}
       </div>
+      {showNext && (
+        <button onClick={onNext}>
+          <Icon name="arrow_right_alt" />
+        </button>
+      )}
     </div>
   );
 };

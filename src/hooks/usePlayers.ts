@@ -32,9 +32,11 @@ export const usePlayers = (): UsePlayers => {
     search: debouncedSearchTerm,
   });
 
-  const canGoNext = !!playersRes?.meta?.next_page;
-  const canGoPrevious = !!(playersRes && playersRes?.meta?.current_page > 1);
   const totalPages = playersRes?.meta?.total_pages ?? 0;
+  const canGoNext = !!playersRes?.meta?.next_page;
+  const canGoPrevious = !!(
+    playersRes && playersRes?.meta?.current_page > DEFAULT_PAGE
+  );
 
   const debouncedSearch = useRef(
     debounce((newValue: string) => setDebouncedSearchTerm(newValue), 500)
@@ -43,7 +45,7 @@ export const usePlayers = (): UsePlayers => {
   useEffect(() => {
     debouncedSearch(searchTerm);
   }, [searchTerm, debouncedSearch]);
-  
+
   useEffect(() => {
     return () => {
       debouncedSearch.cancel();
