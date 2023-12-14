@@ -24,6 +24,7 @@ const SearchPlayers = observer((props: SearchPlayersProps) => {
 
   return (
     <PlayersList
+      title="All NBA Players"
       disableSearch={isLoading}
       emptyListMessage={isLoading ? "Loading..." : ""}
       players={players}

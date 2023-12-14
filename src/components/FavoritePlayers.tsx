@@ -27,6 +27,7 @@ const FavoritePlayers = observer((props: FavoritePlayersProps) => {
 
   return (
     <PlayersList
+      title="Favorite NBA Players"
       disableSearch={isEmpty && term === ""}
       searchTerm={term}
       setSearchTerm={setTerm}

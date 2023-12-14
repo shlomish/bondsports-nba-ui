@@ -13,6 +13,7 @@ interface PaginationControlsProps {
 
 interface PlayersListProps {
   players: Player[];
+  title?: string;
   disableSearch?: boolean;
   className?: string;
   emptyListMessage?: string;
@@ -31,6 +32,7 @@ interface PlayersListItemProps {
 const PlayersList = observer((props: PlayersListProps) => {
   const {
     players,
+    title,
     disableSearch,
     emptyListMessage,
     paginationControls,
@@ -51,6 +53,7 @@ const PlayersList = observer((props: PlayersListProps) => {
 
   return (
     <div className="flex flex-1 flex-col p-4 space-y-2 bg-slate-400 border rounded-md">
+      {title && <div className="text-xl font-bold">{title}</div>}
       {withSearch && (
         <input
           disabled={disableSearch}
@@ -108,25 +111,27 @@ const PlayerListItem = (props: PlayersListItemProps) => {
   const { player, onFavoritesClick, isFavorite } = props;
 
   return (
-    <div className="bg-gray-200 p-4 rounded-md flex justify-between items-center">
-      <div>
-        <div className="font-bold"></div>
-        <PlayerDataRow
-          label="Name"
-          value={`${player.first_name} ${player.last_name}`}
-        />
-        <PlayerDataRow label="Team" value={player.team.full_name} />
-        <PlayerDataRow label="Position" value={player.position} />
-        {player.height_feet && (
-          <PlayerDataRow label="Height" value={`${player.height_feet} ft`} />
-        )}
+    <div className="bg-gray-200 p-4 rounded-md">
+      <div className="flex justify-between items-center">
+        <div>
+          <div className="font-bold"></div>
+          <PlayerDataRow
+            label="Name"
+            value={`${player.first_name} ${player.last_name}`}
+          />
+          <PlayerDataRow label="Team" value={player.team.full_name} />
+          <PlayerDataRow label="Position" value={player.position} />
+          {player.height_feet && (
+            <PlayerDataRow label="Height" value={`${player.height_feet} ft`} />
+          )}
+        </div>
+        <button
+          onClick={() => onFavoritesClick(player)}
+          aria-label="Toggle Favorite"
+        >
+          <Icon name={isFavorite ? "heart_check" : "favorite"} />
+        </button>
       </div>
-      <button
-        onClick={() => onFavoritesClick(player)}
-        aria-label="Toggle Favorite"
-      >
-        <Icon name={isFavorite ? "heart_check" : "favorite"} />
-      </button>
     </div>
   );
 };
