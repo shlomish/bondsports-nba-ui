@@ -64,7 +64,7 @@ const PlayersList = observer((props: PlayersListProps) => {
           className="mb-4 p-2 border rounded-md"
         />
       )}
-      <div className="flex-1 overflow-y-auto space-y-2 p-2 rounded-md">
+      <div className="flex-1 overflow-y-auto space-y-2 py-2 rounded-md">
         {emptyListMessage ? (
           <div>{emptyListMessage}</div>
         ) : (
