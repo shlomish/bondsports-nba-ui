@@ -16,6 +16,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "experimentalDecorators": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
@@ -25,6 +26,7 @@
       "@api": ["./api/index.ts"],
       "@components": ["./components/index.ts"],
       "@hooks": ["./hooks/index.ts"],
+      "@stores": ["./stores/index.tsx"],
       "@constants": ["./constants.ts"]
     },
   },

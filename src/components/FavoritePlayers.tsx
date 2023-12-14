@@ -1,68 +1,40 @@
 import PlayersList from "./PlayersList";
+import { useStores } from "@stores";
+import { observer } from "mobx-react";
+import { useState } from "react";
 
 interface FavoritePlayersProps {}
 
-const FavoritePlayers = (props: FavoritePlayersProps) => {
+const getEmptyListMessage = (term: string, isEmpty: boolean) => {
+  if (!isEmpty) return "";
+
+  return term
+    ? `No favorites players with the name "${term}" yet!`
+    : "No favorites players yet!";
+};
+
+const FavoritePlayers = observer((props: FavoritePlayersProps) => {
+  const { favoritesStore } = useStores();
+  const [term, setTerm] = useState("");
+
+  const allFavorites = favoritesStore.players().filter((player) => {
+    return `${player.first_name} ${player.last_name}`
+      .toLowerCase()
+      .includes(term.toLowerCase());
+  });
+
+  const isEmpty = allFavorites.length === 0;
+
   return (
     <PlayersList
-      players={[
-        {
-          id: 14,
-          first_name: "Ike",
-          height_feet: null,
-          height_inches: null,
-          last_name: "Anigbogu",
-          position: "C",
-          team: {
-            id: 12,
-            abbreviation: "IND",
-            city: "Indiana",
-            conference: "East",
-            division: "Central",
-            full_name: " ",
-            name: "Pacers",
-          },
-          weight_pounds: null,
-        },
-        {
-          id: 25,
-          first_name: "Ron",
-          height_feet: null,
-          height_inches: null,
-          last_name: "Baker",
-          position: "G",
-          team: {
-            id: 20,
-            abbreviation: "NYK",
-            city: "New York",
-            conference: "East",
-            division: "Atlantic",
-            full_name: "New York Knicks",
-            name: "Knicks",
-          },
-          weight_pounds: null,
-        },
-        {
-          id: 47,
-          first_name: "Jabari",
-          height_feet: null,
-          height_inches: null,
-          last_name: "Bird",
-          position: "G",
-          team: {
-            id: 2,
-            abbreviation: "BOS",
-            city: "Boston",
-            conference: "East",
-            division: "Atlantic",
-            full_name: "Boston Celtics",
-            name: "Celtics",
-          },
-          weight_pounds: null,
-        },
-      ]}
+      disableSearch={isEmpty && term === ""}
+      searchTerm={term}
+      setSearchTerm={setTerm}
+      players={allFavorites}
+      onPLayerClick={favoritesStore.remove}
+      emptyListMessage={getEmptyListMessage(term, isEmpty)}
     />
   );
-};
+});
 
 export default FavoritePlayers;

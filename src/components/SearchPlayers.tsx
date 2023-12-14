@@ -1,14 +1,15 @@
 import { Player } from "@types";
 import { usePlayers } from "@hooks";
 import { PlayersList } from "@components";
+import { useStores } from "@stores";
+import { observer } from "mobx-react";
 
 interface SearchPlayersProps {
   className?: string;
   onPLayerClick?: (player: Player) => void;
 }
 
-const SearchPlayers = (props: SearchPlayersProps) => {
-  const { className } = props;
+const SearchPlayers = observer((props: SearchPlayersProps) => {
   const {
     players,
     isLoading,
@@ -19,15 +20,16 @@ const SearchPlayers = (props: SearchPlayersProps) => {
     nextPage,
     previousPage,
   } = usePlayers();
-
-  if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error.message}</div>;
+  const { favoritesStore } = useStores();
 
   return (
     <PlayersList
+      disableSearch={isLoading}
+      emptyListMessage={isLoading ? "Loading..." : ""}
       players={players}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
+      onPLayerClick={favoritesStore.add}
       paginationControls={{
         page,
         totalPages,
@@ -36,6 +38,6 @@ const SearchPlayers = (props: SearchPlayersProps) => {
       }}
     />
   );
-};
+});
 
 export default SearchPlayers;
