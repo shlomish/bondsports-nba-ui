@@ -52,8 +52,8 @@ const PlayersList = observer((props: PlayersListProps) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col p-4 space-y-2 bg-slate-400 border rounded-md">
-      {title && <div className="text-xl font-bold">{title}</div>}
+    <div className="flex flex-1 flex-col p-4 space-y-2 bg-gray-200 border rounded-md">
+      {title && <div className="text-xl font-bold text-gray-800">{title}</div>}
       {withSearch && (
         <input
           disabled={disableSearch}
@@ -64,7 +64,7 @@ const PlayersList = observer((props: PlayersListProps) => {
           className="mb-4 p-2 border rounded-md"
         />
       )}
-      <div className="flex-1 overflow-y-auto space-y-2 bg-white p-2 rounded-md">
+      <div className="flex-1 overflow-y-auto space-y-2 p-2 rounded-md">
         {emptyListMessage ? (
           <div>{emptyListMessage}</div>
         ) : (
@@ -111,7 +111,7 @@ const PlayerListItem = (props: PlayersListItemProps) => {
   const { player, onFavoritesClick, isFavorite } = props;
 
   return (
-    <div className="bg-gray-200 p-4 rounded-md">
+    <div className=" p-4 rounded-md bg-white shadow-sm">
       <div className="flex justify-between items-center">
         <div>
           <div className="font-bold"></div>
